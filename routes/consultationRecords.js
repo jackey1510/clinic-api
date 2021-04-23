@@ -11,7 +11,7 @@ router.get('/', verifyToken, async function(req, res, next) {
     const offset = helper.getOffset(page, config.listPerPage);
     const rows = await db.query(
     `SELECT clinic_name, doctor_name, patient_name, diagnosis, medication, consultation_fee, IF(has_follow_up, 'true', 'false') has_follow_up, created_at AS date 
-    FROM consultation_records where user_id = ? LIMIT ? OFFSET ?`, 
+    FROM consultation_records where user_id = ? ORDER BY CREATED_AT DESC LIMIT ? OFFSET ?`, 
     [
       res.user_id, config.listPerPage + "", offset + ""
     ]
@@ -37,7 +37,7 @@ router.post('/', verifyToken, async function(req, res, next) {
     `INSERT INTO consultation_records (user_id, clinic_name, doctor_name, patient_name, diagnosis, medication, consultation_fee, has_follow_up) 
     VALUES(?, ?, ?, ?, ?, ? ,?, ?)`, 
     [
-      res.user_id, body.clinic_name, body.doctor_name, body.patient_name, body.diagnosis || null, body.medication || null, body.consultation_fee || 0, body.has_follow_up === true ? 1 : 0
+      res.user_id, res.clinic_name, body.doctor_name, body.patient_name, body.diagnosis || null, body.medication || null, body.consultation_fee || 0, body.has_follow_up === true ? 1 : 0
     ]
     );
     res.status(201).json({message: "Consultation record created"});
@@ -60,12 +60,13 @@ async function verifyToken(req, res, next){
     // token only valid for 1 week
     date.setDate(date.getDate() - 7);
     const result = await db.query(
-     `SELECT * FROM auth_tokens WHERE token = ? AND created_at > ?`,[token, date]
+     `SELECT user_id, clinic_name FROM auth_tokens JOIN clinic_users on clinic_users.id = user_id WHERE token = ? AND auth_tokens.created_at > ?`,[token, date]
      );
     if (result.length === 0){
       return res.status(401).json({message: "Authorization token invalid"});
     }
     res.user_id = result[0].user_id
+    res.clinic_name = result[0].clinic_name
     
 
     next();
