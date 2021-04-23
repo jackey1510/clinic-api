@@ -1,0 +1,21 @@
+{
+  "name": "clinic",
+  "version": "1.0.0",
+  "description": "A clinic application that allows user to check clinic’s consultation record.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devServer": "nodemon index.js"
+  },
+  "author": "Jackey",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5"
+  }
+}
