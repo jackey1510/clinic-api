@@ -12,11 +12,11 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  // console.log("Connected!");
-  // con.query("CREATE DATABASE clinic", function (err, result) {
-  //   if (err) throw err;
-  //   console.log("Database created");
-  // });
+  console.log("Connected!");
+  con.query("CREATE DATABASE IF NOT EXISTS clinic", function (err, result) {
+    if (err) throw err;
+    console.log("Database created");
+  });
   con.query("USE clinic", function (err, result) {
     if (err) throw err;
     console.log("use clinic");
