@@ -12,11 +12,11 @@ DB_USER=root
 DB_PASSWORD=password
 DB_NAME=clinic`
 
-You may also run `npm run createdb.js` to initialize the database.
+You may also run `node createdb.js` to initialize the database.
 
 <h2>Start Server</h2>
 
-`npm run index.js`
+`node index.js`
 Server will listen at 3000 port or the port set in .env file.
 
 <h2>Routes</h2>
