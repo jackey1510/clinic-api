@@ -2,17 +2,27 @@ const express = require('express');
 const router = express.Router();
 // const consultationRecords = require('../services/consultationRecords');
 const db = require('../db');
+const helper = require('../helper');
+const config = require('../config');
 
 router.get('/', verifyToken, async function(req, res, next) {
+  let page = req.query.page || 1
   try {
-    const consultation_records = await db.query(
+    const offset = helper.getOffset(page, config.listPerPage);
+    const rows = await db.query(
     `SELECT clinic_name, doctor_name, patient_name, diagnosis, medication, consultation_fee, IF(has_follow_up, 'true', 'false') has_follow_up, created_at AS date 
-    FROM consultation_records where user_id = ?`, 
+    FROM consultation_records where user_id = ? LIMIT ? OFFSET ?`, 
     [
-      res.user_id
+      res.user_id, config.listPerPage + "", offset + ""
     ]
     );
-    res.status(200).json({consultation_records});
+    const data = helper.emptyOrRows(rows);
+    const meta = {page};
+
+    
+    res.status(200).json({
+    data,
+    meta});
   } catch (err) {
     console.error(`Error while getting consultation records`, err.message);
     //next(err);

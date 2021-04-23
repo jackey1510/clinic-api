@@ -18,9 +18,9 @@ app.get('/', (req, res) => {
   res.json({'message': 'ok'});
 })
 
-app.use('/clinic-users', clinicUsersRouter);
+app.use('/clinic_users', clinicUsersRouter);
 
-app.use('/consultation-records', consultationRecordsRouter)
+app.use('/consultation_records', consultationRecordsRouter)
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
